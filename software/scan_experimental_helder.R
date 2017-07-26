@@ -161,3 +161,17 @@ PlotSeq=function(mc.d,seqname,seqnum,coord.1=1,coord.2=width(fasta_list[[seqnum]
   tfbs.track= AnnotationTrack(gr.tfbs,name=seqname,fill=c(colgrad[round(gr.tfbs$Energy*100)]))
   plotTracks(list(sTrack,scores.track,tfbs.track),from=coord.1,to=coord.2)
 }
+
+PlotSeq.2=function(mc.d,seqname,seqnum,coord.1=1,coord.2=width(fasta_list[[seqnum]]),color.level=50){
+  #subset dataset & sort lines by start1
+  d.tmp=subset(mc.d,seq.name==seqname)
+  d.tmp=d.tmp[order(d.tmp$start1),]
+  gr.tfbs=makeGRangesFromDataFrame(d.tmp,start.field = "start1",end.field="end2",seqnames.field ="seq.name",keep.extra.columns = T)
+  
+  colgrad=c(colors()[grep("blue",colors())][1:color.level],colors()[grep("red",colors())][color.level:1])
+  sTrack <- SequenceTrack(fasta_list[[seqnum]])
+  axisTrack = GenomeAxisTrack()
+  scores.track=DataTrack(gr.tfbs[,c("Energy")],name="Score",type=c("b"))
+  tfbs.track= AnnotationTrack(gr.tfbs,name=seqname,fill=c(colgrad[round(gr.tfbs$Energy*100)]))
+  plotTracks(list(sTrack,scores.track,tfbs.track),from=coord.1,to=coord.2)
+}
